@@ -1,12 +1,13 @@
 'use strict';
 
+const config = require('./config.js');
 const fsp = require('node:fs').promises;
 const path = require('node:path');
 const server = require('./ws.js');
 const staticServer = require('./static.js');
-const load = require('./load.js');
-const db = require('./db.js');
-const hash = require('./hash.js');
+const load = require('./load.js')(config.sandbox);
+const db = require('./db.js')(config.pg);
+const hash = require('./hash.js')(config.crypto);
 const logger = require('./logger.js');
 
 const sandbox = {
@@ -14,7 +15,7 @@ const sandbox = {
   db: Object.freeze(db),
   common: { hash },
 };
-const apiPath = path.join(process.cwd(), './api');
+const apiPath = path.join(process.cwd(), config.routers.path);
 const routing = {};
 
 (async () => {
@@ -26,6 +27,6 @@ const routing = {};
     routing[serviceName] = await load(filePath, sandbox);
   }
 
-  staticServer('./static', 8000);
-  server(routing, 8001);
+  staticServer(config.static.path, config.static.port);
+  server(routing, config.api.port);
 })();
