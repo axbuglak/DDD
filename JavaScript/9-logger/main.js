@@ -3,13 +3,12 @@
 const config = require('./config.js');
 const fsp = require('node:fs').promises;
 const path = require('node:path');
-const server = require('./ws.js');
 const staticServer = require('./static.js');
 const load = require('./load.js')(config.sandbox);
 const db = require('./db.js')(config.pg);
 const hash = require('./hash.js')(config.crypto);
 const logger = require('./logger.js');
-const http = require('./http.js');
+const transport = require(`./transport/${config.api.transport}.js`);
 
 const sandbox = {
   console: Object.freeze(logger),
@@ -19,10 +18,6 @@ const sandbox = {
 
 const apiPath = path.join(process.cwd(), config.routers.path);
 const routing = {};
-const transport = {
-  ws: (routing, config) => server(routing, config),
-  http: (routing, config) => http(routing, config)
-};
 
 (async () => {
   const files = await fsp.readdir(apiPath);
@@ -34,6 +29,5 @@ const transport = {
   }
 
   staticServer(config.static.path, config.static.port);
-  if (transport[config.api.transport])
-    transport[config.api.transport](routing, config.api.port);
+  transport(routing, config.api.port);
 })();
