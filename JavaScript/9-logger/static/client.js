@@ -1,5 +1,7 @@
 'use strict';
 
+const PATH = 'ws://127.0.0.1:8001';
+
 const routing = {
   user: {
     create: ['record'],
@@ -66,8 +68,8 @@ const scaffold = (url) => {
 };
 
 (async () => {
-  const api = await scaffold('http://127.0.0.1:8001')(routing);
+  const api = await scaffold(PATH)(routing);
 
-  const data = await api.user.read(3);
+  const data = await api.user.read();
   console.log({ data });
 })();
