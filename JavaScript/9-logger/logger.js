@@ -68,4 +68,9 @@ class Logger {
   }
 }
 
-module.exports = new Logger('./log');
+const transport = {
+  custom: new Logger('./log'),
+  common: console
+};
+
+module.exports = (type) => transport[type];

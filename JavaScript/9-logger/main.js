@@ -7,7 +7,7 @@ const staticServer = require('./static.js');
 // const load = require('./load.js')(config.sandbox);
 const db = require('./db.js')(config.pg);
 const hash = require('./hash.js')(config.crypto);
-// const logger = require('./logger.js');
+const logger = require('./logger.js')(config.logger.type);
 const transport = require(`./transport/${config.api.transport}.js`);
 
 // const sandbox = {
@@ -30,5 +30,5 @@ const routing = {};
   }
 
   staticServer(config.static.path, config.static.port);
-  transport(routing, config.api.port);
+  transport(routing, config.api.port, logger);
 })();

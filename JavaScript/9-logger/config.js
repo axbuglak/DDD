@@ -1,6 +1,9 @@
 'use strict';
 
 module.exports = {
+  logger: {
+    type: 'common'
+  },
   api: {
     port: 8001,
     transport: 'ws'
