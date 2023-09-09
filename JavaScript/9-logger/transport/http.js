@@ -19,24 +19,57 @@ const receiveArgs = async (req) => {
   return JSON.parse(data);
 };
 
-module.exports = (routing, port, console) => {
-  http.createServer(async (req, res) => {
-    res.writeHead(200, HEADERS);
-    const { url, socket } = req;
-    const [name, method, id] = url.substring(1).split('/');
-    const entity = routing[name];
-    if (!entity) return void res.end('Not found');
-    const handler = entity[method];
-    if (!handler) return void res.end('Not found');
-    const src = handler.toString();
-    const signature = src.substring(0, src.indexOf(')'));
-    const args = [];
-    if (signature.includes('(id')) args.push(id);
-    if (signature.includes('{')) args.push(await receiveArgs(req));
-    console.log(`${socket.remoteAddress} ${method} ${url}`);
-    const result = await handler(...args);
-    res.end(JSON.stringify(result.rows));
-  }).listen(port);
+const httpServer = {
+  pure: (routing, port, console) => {
+    http.createServer(async (req, res) => {
+      res.writeHead(200, HEADERS);
+      const { url, socket } = req;
+      const [name, method, id] = url.substring(1).split('/');
+      const entity = routing[name];
+      if (!entity) return void res.end('Not found');
+      const handler = entity[method];
+      if (!handler) return void res.end('Not found');
+      const src = handler.toString();
+      const signature = src.substring(0, src.indexOf(')'));
+      const args = [];
+      if (signature.includes('(id')) args.push(id);
+      if (signature.includes('{')) args.push(await receiveArgs(req));
+      console.log(`${socket.remoteAddress} ${method} ${url}`);
+      const result = await handler(...args);
+      res.end(JSON.stringify(result.rows));
+    }).listen(port);
 
-  console.log(`API on port ${port}`);
+    console.log(`API on port ${port}`);
+  },
+  fastify: (server, routing, PORT) => {
+    for (const [iface, methods] of Object.entries(routing)) {
+      for (const [method, handler] of Object.entries(methods)) {
+        if (typeof handler !== 'function') {
+          continue;
+        }
+
+        server.post(`/${iface}/${method}/:id`, async (req, res) => {
+          const { url, socket } = req;
+          const src = handler.toString();
+          const signature = src.substring(0, src.indexOf(')'));
+          const args = [];
+          if (signature.includes('(id')) args.push(req.params.id);
+          if (signature.includes('{') && !req.body) return void res.send('You should send params');
+          args.push(req.body);
+          console.log(`${socket.remoteAddress} ${method} ${url}`);
+          const result = await handler(...args);
+          res.send(result.rows);
+        });
+      }
+    }
+    server.listen({ port: PORT }, (err) => {
+      if (err) {
+        server.log.error(err);
+        process.exit(1);
+      }
+    });
+    console.log(`Fastify HTTP run on ${PORT}`);
+  }
 };
+
+module.exports = (framework) => httpServer[framework];

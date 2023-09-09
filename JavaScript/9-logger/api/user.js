@@ -19,8 +19,8 @@ module.exports = (db, hash) => ({
     return await db('users').delete(id);
   },
 
-  async find(mask) {
+  async find(login) {
     const sql = 'SELECT login from users where login like $1';
-    return await db('users').query(sql, [mask]);
+    return await db('users').query(sql, [login]);
   },
 });

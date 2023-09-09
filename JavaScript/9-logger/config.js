@@ -6,7 +6,8 @@ module.exports = {
   },
   api: {
     port: 8001,
-    transport: 'ws'
+    transport: 'ws',
+    framework: 'pure',
   },
   routers: {
     path: './api'
