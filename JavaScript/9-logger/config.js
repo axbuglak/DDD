@@ -7,7 +7,7 @@ module.exports = {
   api: {
     port: 8001,
     transport: 'ws',
-    framework: 'pure',
+    framework: 'fastify',
   },
   routers: {
     path: './api'

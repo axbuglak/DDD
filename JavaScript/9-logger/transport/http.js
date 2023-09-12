@@ -42,13 +42,13 @@ const httpServer = {
     console.log(`API on port ${port}`);
   },
   fastify: (server, routing, PORT) => {
-    for (const [iface, methods] of Object.entries(routing)) {
+    for (const [name, methods] of Object.entries(routing)) {
       for (const [method, handler] of Object.entries(methods)) {
-        if (typeof handler !== 'function') {
+        if (handler && typeof handler !== 'function') {
           continue;
         }
 
-        server.post(`/${iface}/${method}/:id`, async (req, res) => {
+        server.post(`/${name}/${method}/:id`, async (req, res) => {
           const { url, socket } = req;
           const src = handler.toString();
           const signature = src.substring(0, src.indexOf(')'));

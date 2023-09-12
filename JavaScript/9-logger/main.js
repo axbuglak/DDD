@@ -23,5 +23,4 @@ const routing = {};
 
   staticServer(config.static.path, config.static.port);
   framework(config.api.transport, routing, config.api.port, logger);
-  // transport(routing, config.api.port, logger);
 })();
