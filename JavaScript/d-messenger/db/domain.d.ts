@@ -1,5 +1,6 @@
 interface Role {
   name: string;
+  chunk: number;
   roleId?: string;
 }
 
@@ -17,11 +18,42 @@ interface Area {
   areaId?: string;
 }
 
+interface Color {
+  name: string;
+  colorId?: string;
+}
+
+interface Discount {
+  discount: number;
+  discountId?: string;
+}
+
+interface Material {
+  name: string;
+  price: number;
+  materialId?: string;
+}
+
 interface Message {
   areaId: string;
   fromId: string;
   text: string;
   messageId?: string;
+}
+
+interface Variant {
+  colorId: string;
+  price: number;
+  materialsId: string[];
+  variantId?: string;
+}
+
+interface Product {
+  name: string;
+  description: string;
+  manufacturId: string;
+  variationsId: string[];
+  productId?: string;
 }
 
 interface Session {

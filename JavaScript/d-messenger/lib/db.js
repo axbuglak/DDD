@@ -10,7 +10,7 @@ const crud = (pool) => (table) => ({
 
   async read(id, fields = ['*']) {
     const names = fields.join(', ');
-    const sql = `SELECT ${names} FROM ${table}`;
+    const sql = `SELECT ${names} FROM "${table}"`;
     if (!id) return pool.query(sql);
     return pool.query(`${sql} WHERE id = $1`, [id]);
   },

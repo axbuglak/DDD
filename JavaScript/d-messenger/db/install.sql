@@ -1,4 +1,4 @@
-DROP DATABASE IF EXISTS example;
+DROP DATABASE IF EXISTS dmessenger;
 DROP USER IF EXISTS marcus;
 CREATE USER marcus WITH PASSWORD 'marcus';
-CREATE DATABASE example OWNER marcus;
+CREATE DATABASE dmessenger OWNER marcus;

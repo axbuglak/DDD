@@ -1,0 +1,5 @@
+({
+  Entity: {},
+
+  discount: { type: 'number' },
+});

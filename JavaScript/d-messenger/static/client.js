@@ -15,7 +15,7 @@ transport.http = (url) => (structure) => {
           fetch(`${url}/api/${name}/${method}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ args }),
+            body: JSON.stringify({ ...args }),
           }).then((res) => {
             if (res.status === 200) resolve(res.json());
             else reject(new Error(`Status Code: ${res.status}`));
@@ -66,7 +66,10 @@ const scaffold = (url) => {
     messenger: {
       method: ['arg'],
     },
+    product: {
+      read: ['name', 'description'],
+    },
   });
-  const data = await api.auth.signin('marcus', 'marcus');
+  const data = await api.product.read();
   console.dir({ data });
 })();

@@ -15,13 +15,13 @@ module.exports = {
   db: {
     host: '127.0.0.1',
     port: 5432,
-    database: 'example',
-    user: 'marcus',
-    password: 'marcus',
+    database: 'dmessenger',
+    user: 'abuglak',
+    password: 'postgres',
   },
   pg: {
     database: 'postgres',
-    user: 'postgres',
+    user: 'abuglak',
     password: 'postgres',
   },
 };
